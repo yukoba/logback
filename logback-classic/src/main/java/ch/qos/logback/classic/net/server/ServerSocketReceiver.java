@@ -18,6 +18,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.net.ServerSocketFactory;
 
@@ -37,7 +38,7 @@ public class ServerSocketReceiver extends ReceiverBase {
     /**
      * Default {@link ServerSocket} backlog
      */
-    public static final int DEFAULT_BACKLOG = 50;
+    public static final int DEFAULT_BACKLOG = 500;
 
     private int port = AbstractSocketAppender.DEFAULT_PORT;
     private int backlog = DEFAULT_BACKLOG;
@@ -58,7 +59,7 @@ public class ServerSocketReceiver extends ReceiverBase {
 
             ServerListener<RemoteAppenderClient> listener = createServerListener(serverSocket);
 
-            runner = createServerRunner(listener, getContext().getExecutorService());
+            runner = createServerRunner(listener, Executors.newCachedThreadPool());
             runner.setContext(getContext());
             return true;
         } catch (Exception ex) {
